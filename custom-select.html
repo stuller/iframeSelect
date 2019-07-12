@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom-select demo</title>
+    <script src="js/custom-select.min.js"></script>
+    <link rel="stylesheet" href="css/custom-select.css"/>
+    <link rel="stylesheet" href="css/styles.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+<select id="mySelect" style="display:none;"><!--what to do to hide original select?-->
+    <option value>Select...</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+    <option value="4">Option 4</option>
+    <option value="5">Option 5</option>
+    <option value="6">Option 6</option>
+    <option value="7">Option 7</option>
+    <option value="8">Option 8</option>
+    <option value="9">Option 9</option>
+    <option value="10">Option 10</option>
+
+</select>
+<style>
+    .offscreen = {
+        position:absolute;
+        left: -10000px;
+    }
+    .custom-select-option.has-focus {
+        color: #ffffff;
+        background-color: #ffffff20
+    }
+</style>
+<script>
+//https://www.npmjs.com/package/custom-select
+
+    //TODO use instance of customSelect to set iframe height based on whether or not it is open
+    var collapsedHeight, expandedHeight, banks;
+
+    // get default height when collapsed
+    window.addEventListener('load', function() {
+        // set up select
+        banks = customSelect('#mySelect')[0];
+        console.log(document.hidden, document.msHidden, document.webkitHidden)
+
+        var selectContainer = document.querySelector('.custom-select-container');
+
+        collapsedHeight = selectContainer.offsetHeight;
+        console.log({collapsedHeight})
+        var tempSelect = selectContainer.cloneNode(true);
+        tempSelect.classList.add('is-open');
+        document.body.appendChild(tempSelect);
+        expandedHeight = document.querySelectorAll('.custom-select-panel')[1].offsetHeight + collapsedHeight;
+        document.body.removeChild(tempSelect);
+        resizeSelf(collapsedHeight);
+
+        banks.container.addEventListener('custom-select:open', function() {resizeSelf(expandedHeight)});
+        banks.container.addEventListener('custom-select:close', function() {resizeSelf(collapsedHeight)});
+        banks.select.addEventListener('change', function(e) { console.log('value is ' + e.target.value)});
+        document.body.addEventListener('mouseleave', function() {resizeSelf(collapsedHeight); banks.open = false;});
+
+    });
+    // if user clicks in the pixels we padded with to prevent scrollbars, we need to resize again
+    // otherwise select will close but iframe will stay expanded height
+    // window.addEventListener('click', function() {
+    //     resizeSelf();
+    // });
+
+    // tells parent window to resize height of iframe
+    function resizeSelf(height) {
+        console.log('resizing', height);
+        // we will want to replace this with post-robot
+        parent.postMessage(parseInt(height), 'http://localhost:63342');
+    }
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+body {
+    font-family: "Roboto","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+    margin:0;
+}
+
+
+#page, .page {
+    margin: 40px;
+    background-color: white;
+}
+
+
+#choosebumps {
+    padding:0;
+    margin:0;
+}
+
+.choosebumps {
+    border: 1px solid transparent;
+    width: 100%;
+    outline: none;
+    position: relative;
+    box-sizing: border-box
+}
+
+.choosebumps.cb--active, .choosebumps:focus {
+    outline: none
+}
+
+.choosebumps *, .choosebumps :after, .choosebumps :before {
+    box-sizing: border-box
+}
+
+.cb-main-item {
+    padding-left:1em;
+    cursor: default;
+    height: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cb-main-item.cb-placeholder:before {
+    content: attr(placeholder);
+    opacity: .4;
+}
+
+.cb-caret {
+    height: 1em;
+    width: 1em;
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1
+}
+
+.cb-caret path {
+    stroke: currentColor;
+    stroke-width: 20px
+}
+
+.cb-items {
+    display: none;
+    position: absolute;
+    width: calc(100% + 2px);
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    top: calc(100% + 1px);
+    left: -1px;
+    z-index: 2;
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, .3);
+    border-top: none
+}
+
+.cb-items > div {
+    padding-left: 1em;
+    cursor: default;
+    height: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/*MOVE THIS TO JS because we have to calculate background-color to add the 20% alpha on the end*/
+.cb-items > div:hover {
+    color: #137bee;
+    background-color: #137bee20;
+}
+
+.cb-selected-item {
+    display: inline
+}
+/*not sure if this is needed, but if it is we should set colors from js*/
+.cb-selected {
+    background-color: #30323f;
+    color: #fff
+}
+
+.cb-active .cb-items {
+    display: block
+}
+
+.cb-loader {
+    position: absolute;
+    top: 50%;
+    margin-top: -.5em;
+    right: 1em;
+    width: 1em;
+    height: 1em;
+    border: 2px solid;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: a .5s infinite linear;
+    display: none
+}
+
+@keyframes a {
+    to {
+        transform: rotate(1turn)
+    }
+}

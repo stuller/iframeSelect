@@ -1,0 +1,171 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>IFrame Select PoC</title>
+    <style>
+        body {
+            font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+        }
+        .error {
+            color: red;
+        }
+        .DRElement {
+            border: 1px solid #ced4da;
+            margin: 10px 0.2rem;
+            border-radius: .25rem;
+            overflow: hidden;
+            background-color: white;
+            color: #333;
+            font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            width:400px;
+            padding: 5px 10px;
+        }
+
+        .DRElement--empty {
+            /* border-color: #db4518;
+            color: #db4518;
+            outline: 0; */
+        }
+
+        .DRElement--complete {
+            border-color: green;
+            color: green;
+            outline: 0;
+        }
+
+        .DRElement--invalid {
+            border-color: red;
+            color: red;
+            outline: 0;
+        }
+
+        .DRElement--focus {
+            border-color: #137bee;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            outline: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+  <div class="page">
+    <div id="cardError" class="error"></div>
+    <div id="ccnumError" class="error"></div>
+    <div id="ccnum"></div>
+    <div id="ccExpError" class="error"></div>
+    <div id="ccExp"></div>
+    <div id="ccCVVError" class="error"></div>
+    <div id="ccCvv"></div>
+    <button id="submitcc">Submit</button>
+
+  </div>
+
+    <script src="https://js.digitalriver.com/v1/DigitalRiver.js"></script>
+    <script>
+
+        var apikey = 'pk_d8013e0122b84103be7b1db903437a46';
+        var drpayments = new DigitalRiver(apikey);
+        document.getElementById('submitcc').addEventListener('click', createSource);
+
+        var options = {
+            classes: {
+                base: 'DRElement',
+                complete: 'DRElement--complete',
+                empty: 'DRElement--empty',
+                invalid: 'DRElement--invalid'
+            },
+            style: {
+                base: getStyleOptionsFromClass('DRElement'), //if you derive style options from an existing class, you shouldn't have to create an options admin page
+                complete: getStyleOptionsFromClass('DRElement--complete'),
+                empty: getStyleOptionsFromClass('DRElement--empty'),
+                invalid: getStyleOptionsFromClass('DRElement--invalid')
+            }
+        }
+
+        var cardnumber = drpayments.createElement('cardnumber', options);
+        var cardexpiration = drpayments.createElement('cardexpiration', options);
+        var cardcvv = drpayments.createElement('cardcvv', options);
+
+        cardnumber.mount('ccnum');
+        cardexpiration.mount('ccExp');
+        cardcvv.mount('ccCvv');
+
+        cardnumber.on('change', function(event) {
+            handleChange(event, 'ccnumError');
+        });
+        cardexpiration.on('change', function(event) {
+            handleChange(event, 'ccExpError');
+        });
+        cardcvv.on('change', function(event) {
+            handleChange(event, 'ccCVVError');
+        });
+
+        function handleChange(event, msgDiv) {
+            var msgEl = document.getElementById(msgDiv);
+            if(event.error) {
+                msgEl.innerText = event.error.message;
+            } else {
+                msgEl.innerText = '';
+            }
+        }
+        function getStyleOptionsFromClass(className) {
+            tempDiv = document.createElement('div');
+            tempDiv.setAttribute('id', 'tempDiv' + className);
+            tempDiv.className = (className);
+            document.body.appendChild(tempDiv);
+            let tempDivEl = document.getElementById('tempDiv' + className);
+            let style = window.getComputedStyle(tempDivEl);
+
+            let styles = {
+                color: style.color,
+                fontFamily: style.fontFamily.replace(new RegExp('"', 'g'), ''),
+                fontSize: style.fontSize
+            }
+            
+            document.body.removeChild(tempDivEl);
+
+            return(styles);
+        }
+
+        function createSource() {
+            var payload = {
+                "type": "creditCard",
+                // "amount": 12.00, //you would grab this from your cart
+                // "currency": "USD", //you would grab this from your cart
+                "owner": { //you would grab owner data from your other fields
+                    firstName: "John",
+                    lastName: "Doe",
+                    email: "john.doe@digitalriver.com",
+                    phoneNumber: "000-000-0000",
+                    address: {
+                        line1: "10380 Bren Road West",
+                        line2: "Suite 123",
+                        city: "Minnetonka",
+                        state: "MN",
+                        postalCode: "55343",
+                        country: "US"
+                    }
+                }
+            }  
+            
+            drpayments.createSource(cardnumber,payload).then(function(result) {
+                    if(result.error) {
+                        //handle errors
+                        document.getElementById('cardError').innerText = 'There was an error with your payment info.  Please try again.'
+                    } else {
+                        var source = result.source;
+                        //next you would apply payment to cart via APIs
+                        console.log(source);
+                    }
+            });
+        }
+        
+    </script>
+</body>
+</html>

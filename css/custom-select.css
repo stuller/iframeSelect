@@ -1,0 +1,73 @@
+.custom-select-container {
+  position: relative;
+  box-sizing: border-box;;
+}
+.custom-select-container * {
+  box-sizing: border-box;
+}
+.custom-select-container.is-disabled {
+  opacity: .333;
+}
+.custom-select-opener {
+  /*background-color: #ccc;*/
+  padding: 0.5em;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 100%;
+  outline-color: transparent;
+}
+.custom-select-opener::after {
+  content:"\A";
+  width: 0;
+  height: 0;
+  border-left: .5em solid transparent;
+  border-right:.5em solid transparent;
+  border-top: .5em solid currentColor;
+  margin: .5em .25em;
+  float: right;
+}
+.custom-select-container select {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.custom-select-panel {
+  max-height: 0;
+  /*transition: max-height .5s ease-out, overflow-y 0.1s 0.5s;*/
+  overflow: hidden;
+  /*background-color: #e9e9e9;*/
+  position: absolute;
+  top: 100%;
+  z-index: 1;
+  width: 100%;
+
+  cursor: pointer;
+}
+.custom-select-container.is-open .custom-select-panel {
+  /*TODO calc max-height based on number of options*/
+  max-height: 400px;
+  overflow-y: auto
+}
+.custom-select-option {
+  padding: 0.5em;
+}
+.custom-select-option.has-focus {
+  /*background-color: LightBlue;*/
+}
+.custom-select-option.is-selected::before {
+  content: "✔";
+  padding-right: 0.5em;
+}
+.custom-select-optgroup > .custom-select-option {
+  padding-left: 2em;
+}
+.custom-select-optgroup::before {
+  content: attr(data-label);
+  display: block;
+  padding: 0.5em;
+  /*color: #888;*/
+}

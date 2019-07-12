@@ -1,0 +1,90 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>IFrame Select PoC</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        .basic {
+            font-family: Roboto, Helvetica Neue, Helvetica, Helvetica, Arial, sans-serif;
+            font-size: 20px;
+            /*font-smoothing: antialiased;*/
+            /*font-style: bold;*/
+            /*font-variant: normal;*/
+            /*letter-spacing: 2px;*/
+            /*text-align: center;*/
+            /*text-decoration: underline;*/
+            /*text-shadow: 2px 2px #ff0000;*/
+            /*font-weight: 400;*/
+        }
+        .empty .cb-items > div:hover {
+            /*color: #ffffff;*/
+            /*background-color: #ffffff20*/
+        }
+    </style>
+</head>
+
+<body onload="parent.postMessage(document.body.scrollHeight, 'http://localhost:63342');">
+<div id="select" class="basic empty"></div>
+
+<script src="js/choosebumps.min.js"></script>
+<script>
+    //TODO figure out height thing for edge
+    var collapsedHeight;
+
+    // get default height when collapsed
+    window.addEventListener('load', function() {
+        collapsedHeight = document.getElementById('select').offsetHeight;
+        console.log('collapsed size is ' + document.getElementById('select').offsetHeight);
+        resizeSelf();
+    });
+    // if user clicks in the pixels we padded with to prevent scrollbars, we need to resize again
+    // otherwise select will close but iframe will stay expanded height
+    window.addEventListener('click', function() {
+        resizeSelf();
+    });
+
+    // tells parent window to resize height of iframe
+    function resizeSelf() {
+
+        console.log('collapsed size is ' + document.getElementById('select').offsetHeight);
+        var itemsHeight = document.querySelector('.cb-items').offsetHeight;
+        var newHeight = itemsHeight + collapsedHeight > collapsedHeight ? itemsHeight + collapsedHeight : collapsedHeight;
+        console.log('resizing', newHeight);
+        console.log('selected item is', cb.selected);
+        // we will want to replace this with post-robot
+        parent.postMessage(newHeight, 'http://localhost:63342');
+    }
+    // set up select
+    var cb = ChooseBumps('#select',{
+        items: ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6", "Option 7", "Option 8", "Option 9", "Option 10"],
+        placeholder: 'Choose your option',
+        onselect: resizeSelf
+    });
+    console.log('collapsed size is ' + document.getElementById('select').offsetHeight);
+
+    var trigger = document.querySelector('#select .cb-main-item.trigger');
+    var options = document.querySelector('#select .cb-items');
+    var optionsList = document.querySelectorAll('#select .cb-items div');
+
+    //add accessibility to select
+    options.setAttribute('role', 'listbox');
+    options.setAttribute('id', 'bank-list');
+    trigger.setAttribute('aria-haspopup', 'listbox');
+
+    optionsList.forEach((option) => {
+        console.log(option);
+        option.setAttribute('role', 'option');
+    });
+
+    trigger.addEventListener('click', resizeSelf);
+
+
+    console.log(cb);
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="parent">
+
+    <div id="threeDS2">
+        <div id="fingerPrintToken"></div>
+        <div class="oneMore"></div>
+    </div>
+
+</div>
+
+<script>
+
+    adyenJS = document.createElement('script');
+    adyenJS.setAttribute('src','https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/3.0.0/adyen.js');
+    adyenJS.setAttribute('id', 'adyenJS');
+    document.body.append(adyenJS);
+
+    adyenScript = document.getElementById('adyenJS');
+    adyenScript.addEventListener('load', function() {
+        const configuration = {
+            locale: "en_US",
+            environment: "test",
+            originKey: "pub.v2.8115061157590058.aHR0cDovL2NwZ2FwcGRldjAwMDAzLmMwMzEuZGlnaXRhbHJpdmVyd3MubmV0OjgwODA.RqYdix1nZTpyXKHLp2et8m1Tf39YHaSGsGrRXDOa7L4",
+            paymentMethodsResponse: "Credit Card",
+            onChange: handleConfig
+        };
+        const checkout = new AdyenCheckout(configuration);
+
+
+
+
+        checkout.create('threeDS2DeviceFingerprint', {
+            fingerprintToken: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTA2MTE1NzU5MDA1OC5hSFIwY0hNNkx5OWthV2RwZEdGc2NtbDJaWEl1WTI5dEx3LkRYWV9fcTFEYTk1Smo2SWZJakZ6bjk3a3VmSkI3eGlURFItUmN6VHhIRzgiLCJ0aHJlZURTTWV0aG9kVXJsIjoiaHR0cHM6XC9cL3BhbC10ZXN0LmFkeWVuLmNvbVwvdGhyZWVkczJzaW11bGF0b3JcL2Fjc1wvc3RhcnRNZXRob2Quc2h0bWwiLCJ0aHJlZURTU2VydmVyVHJhbnNJRCI6IjMxYTY1MWI4LTA3MmQtNDkzMC04MWQ3LWNlYzUyN2Y1MzE1OCJ9',
+            onComplete: handleComplete,
+            onError: console.error
+        })
+            .mount('#threeDS2');
+
+
+    });
+
+
+    function handleConfig(data) {
+        console.log('verify');
+        console.log(data);
+    }
+
+    function handleComplete(res) {
+        console.log('fingerprint token');
+        document.getElementById('fingerPrintToken').innerHTML = res.data.details["threeds2.fingerprint"];
+    }
+</script>
+
+</body>
+</html>

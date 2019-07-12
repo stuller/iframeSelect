@@ -1,0 +1,72 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>IFrame Select PoC</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <style>
+        .DRElement {
+            border: 1px solid #ced4da;
+            margin: 0 0.2rem;
+            border-radius: .25rem;
+            overflow: hidden;
+            background-color: white;
+
+            width:400px;
+            z-index:100;
+            position:absolute;
+        }
+        .followingParagraph {
+            margin-top:80px;
+        }
+
+        .custom--empty {
+            border-color: #db4518;
+            background-color: lightsalmon;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(219, 69, 24, 0.31);
+        }
+    </style>
+  <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript">
+        function resizeCrossDomainIframe(id, other_domain) {
+            console.log('foo');
+            var iframe = document.getElementById(id);
+            window.addEventListener('message', function(event) {
+                console.log('foo3', event);
+                console.log(event.origin, other_domain)
+                if (event.origin !== other_domain) return; // only accept messages from the specified domain
+                if (isNaN(event.data)) return; // only accept something which can be parsed as a number
+                var height = parseInt(event.data);// + 4; // add some extra height to avoid scrollbar
+                console.log(height);
+                iframe.style.height = height + "px";
+                console.log(iframe);
+            }, false);
+        }
+
+    </script>
+</head>
+
+<body>
+  <div class="page">
+      <h1>iFrame Select PoC</h1>
+      <p>Testing out how an iframe with a select dropdown will scale</p>
+      <!--<div id="choosebumps" class="DRElement custom&#45;&#45;empty">-->
+          <!--<iframe-->
+                  <!--style="height: 35px; width: 100%; margin: 0px; padding: 0px; border: none;"-->
+                  <!--src="choosebumps.html" scrolling="no" id="my_iframe" onload="resizeCrossDomainIframe('my_iframe', 'http://localhost:63342');"></iframe>-->
+      <!--</div>-->
+
+      <div id="custom-select" class="DRElement custom--empty">
+          <iframe
+                  style="height: 35px; width: 100%; margin: 0px; padding: 0px; border: none;"
+                  src="custom-select.html" scrolling="no" id="my_iframe2" onload="resizeCrossDomainIframe('my_iframe2', 'http://localhost:63342');"></iframe>
+      </div>
+      <p class="followingParagraph">Missing until dinner time tuxedo cats always looking dapper for destroy house in 5 seconds or present belly, scratch hand when stroked. My slave human didn't give me any food so i pooped on the floor scratch the furniture demand to be let outside at once, and expect owner to wait for me as i think about it so get my claw stuck in the dog's ear for cry louder at reflection slap owner's face at 5am until human fills food dish. Crusty butthole fall asleep on the washing machine nap all day, but meow in empty rooms. Sweet beast rub whiskers on bare skin act innocent be a nyan cat, feel great about it, be annoying 24/7 poop rainbows in litter box all day and sleep nap but cat not kitten around ignore the squirrels, you'll never catch them anyway. Rub face on owner caticus cuteicus hack up furballs or scratch at fleas, meow until belly rubs, hide behind curtain when vacuum cleaner is on scratch strangers and poo on owners food wack the mini furry mouse and poop in a handbag look delicious and drink the soapy mopping up water then puke giant foamy fur-balls, so shred all toilet paper and spread around the house. Crash against wall but walk away like nothing happened munch on tasty moths attack feet, refuse to drink water except out of someone's glass make plans to dominate world and then take a nap being gorgeous with belly side up cough hairball, eat toilet paper. Lick master's hand at first then bite because im moody purr when being pet sleep everywhere, but not in my bed nap all day crash against wall but walk away like nothing happened. Love me!. Scamper my cat stared at me he was sipping his tea, too. Lies down this human feeds me, i should be a god or i is not fat, i is fluffy, sitting in a box stuff and things. </p>
+  </div>
+
+
+</body>
+</html>

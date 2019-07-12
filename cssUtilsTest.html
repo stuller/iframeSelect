@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Utils</title>
+    <script src="js/cssUtils.js"></script>
+    <style>
+        body {font-family: Arial; font-size:20px;}
+        .text {
+            color: #137bee;
+        }
+        p {
+            padding:10px;
+            font-size:20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <p class="text">Here is some text inside a wrapper</p>
+<form id="colorForm">
+    <label for="color">Color:</label>
+    <input id="color" name="color" type="text" value="red"/>
+    <button type="submit">set color</button>
+</form>
+    <p class="textWithHover">Here is some text with a hover style from field</p>
+</div>
+
+<script>
+    document.getElementById('colorForm').addEventListener('submit', function(event) {
+        let color = document.getElementById('color').value;
+        let percent = 20;
+        event.preventDefault();
+
+        //convert to alpha color format
+        rgbaColor = convertToAlphaColor(color, percent);
+
+        //do something with the rgba color
+        let newStyle;
+        if(!document.getElementById('newStyle')) {
+            newStyle = document.createElement('style');
+            newStyle.setAttribute('id', 'newStyle');
+            document.head.appendChild(newStyle);
+        } else {
+            newStyle = document.getElementById('newStyle')
+        }
+        newStyle.innerText = '.hover:hover { background-color:' + rgbaColor + '; color:' + color + '}';
+        document.querySelector('.textWithHover').classList.add('hover')
+
+
+    })
+
+
+
+    console.log(convertToAlphaColor('red', 10));
+    console.log(convertToAlphaColor('red', '10'));
+    console.log(convertToAlphaColor('#137bee', 10));
+    console.log(convertToAlphaColor('#00', 10));
+    console.log(convertToAlphaColor('#0cf', 10));
+    console.log(convertToAlphaColor('#137beeCC', 10));
+    console.log(convertToAlphaColor('#00fc', 10));
+    console.log(convertToAlphaColor('rgb(30, 40, 100)', 10));
+    console.log(convertToAlphaColor('rgb(30 40 100)', 10));
+    console.log(convertToAlphaColor('rgb(255, 0, 153, 100%)', 10));
+    console.log(convertToAlphaColor('rgb(255 0 60/ 1)', 10));
+    console.log(convertToAlphaColor('rgb(255 0 60/ 100%)', 10));
+    console.log(convertToAlphaColor('rgb(255, 0, 32.5, 1)', 10));
+    console.log(convertToAlphaColor('rgb(100%,0%,60%)', 10));
+    console.log(convertToAlphaColor('rgba(30, 40, 100, .2)', 10));
+    console.log(convertToAlphaColor('rgba(30 40 100 .2)', 10));
+    console.log(convertToAlphaColor('hsl(270,60%,70%)', 10));
+    console.log(convertToAlphaColor('hsl(270 60% 70%)', 10));
+    console.log(convertToAlphaColor('hsl(270deg, 60%, 70%)', 10));
+    console.log(convertToAlphaColor('hsl(4.71239rad, 60%, 70%)', 10));
+    console.log(convertToAlphaColor('hsla(240, 100%, 50%, .7) ', 10));
+
+
+
+</script>
+</body>
+</html>
