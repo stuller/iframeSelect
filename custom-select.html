@@ -72,7 +72,7 @@
     function resizeSelf(height) {
         console.log('resizing', height);
         // we will want to replace this with post-robot
-        parent.postMessage(parseInt(height), 'http://localhost:63342');
+        parent.postMessage(parseInt(height), window.location.protocol + '//' + window.location.host);
     }
 
 
